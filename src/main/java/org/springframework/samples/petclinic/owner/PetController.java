@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.springframework.samples.petclinic.featureflag.annotation.FeatureToggle;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.Assert;
@@ -95,6 +96,8 @@ class PetController {
 		dataBinder.setValidator(new PetValidator());
 	}
 
+	@FeatureToggle(key = "ADD_NEW_PET", disabledMessage = "Adding new pets is currently disabled",
+			disabledRedirect = "/owners/{ownerId}")
 	@GetMapping("/pets/new")
 	public String initCreationForm(Owner owner, ModelMap model) {
 		Pet pet = new Pet();
@@ -102,6 +105,8 @@ class PetController {
 		return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
 	}
 
+	@FeatureToggle(key = "ADD_NEW_PET", disabledMessage = "Adding new pets is currently disabled",
+			disabledRedirect = "/owners/{ownerId}")
 	@PostMapping("/pets/new")
 	public String processCreationForm(Owner owner, @Valid Pet pet, BindingResult result,
 			RedirectAttributes redirectAttributes) {
